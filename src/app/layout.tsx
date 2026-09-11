@@ -1,9 +1,17 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Quicksand, Spline_Sans } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/providers/QueryProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+const quicksand = Quicksand({
+  subsets: ["latin"],
+  variable: "--font-quicksand",
+});
+
+const splineSans = Spline_Sans({
+  subsets: ["latin"],
+  variable: "--font-spline",
+});
 
 export const metadata: Metadata = {
   title: "WheRecipe",
@@ -17,10 +25,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={inter.className}>
-        <QueryProvider>
-          {children}
-        </QueryProvider>
+      <body className={`${quicksand.variable} ${splineSans.variable} antialiased`}>
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   );
