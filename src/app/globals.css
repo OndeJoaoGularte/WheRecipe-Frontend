@@ -22,8 +22,13 @@
   --font-display: var(--font-quicksand);
 }
 
+html,
 body {
-  min-height: 100vh;
+  height: 100%;
+}
+
+body {
+  min-height: 100dvh;
   color: var(--foreground);
   font-family: var(--font-spline), system-ui, sans-serif;
   background:
@@ -34,4 +39,17 @@ body {
 
 .font-display {
   font-family: var(--font-quicksand), var(--font-spline), system-ui, sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #fcd34d;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
 }

@@ -25,49 +25,49 @@ export default function HomePage() {
   }
 
   return (
-    <div className="mx-auto flex min-h-full w-full max-w-3xl flex-col gap-10 px-4 py-8 sm:px-6 sm:py-12">
-      <header className="space-y-4">
-        <p className="font-display text-4xl font-bold tracking-tight text-[var(--secondary)] sm:text-5xl">
+    <div className="flex h-dvh min-h-0 flex-col overflow-hidden px-4 py-4 sm:px-6 sm:py-5">
+      <header className="mx-auto w-full max-w-6xl shrink-0 pb-4">
+        <p className="font-display text-3xl font-bold tracking-tight text-[var(--secondary)] sm:text-4xl">
           WheRecipe
         </p>
-        <div className="space-y-2">
-          <h1 className="max-w-xl text-2xl font-semibold leading-tight text-[var(--ink)] sm:text-3xl">
-            Descubra o que cozinhar com o que já tem.
-          </h1>
-          <p className="max-w-lg text-[var(--muted)]">
-            Informe os ingredientes da sua despensa e receba opções práticas sem
-            precisar ir ao mercado.
-          </p>
-        </div>
+        <p className="mt-1 max-w-xl text-sm text-[var(--muted)] sm:text-base">
+          Descubra o que cozinhar com o que já tem em casa.
+        </p>
       </header>
 
-      {ingredientsQuery.isLoading && (
-        <div className="h-40 animate-pulse rounded-2xl bg-[var(--accent-soft)]/60" />
-      )}
+      <div className="mx-auto grid min-h-0 w-full max-w-6xl flex-1 grid-cols-1 grid-rows-2 gap-4 lg:grid-cols-[minmax(280px,38%)_1fr] lg:grid-rows-1 lg:gap-6">
+        <aside className="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-[var(--line)] bg-white/60 p-4">
+          {ingredientsQuery.isLoading && (
+            <div className="h-full animate-pulse rounded-xl bg-[var(--accent-soft)]/60" />
+          )}
 
-      {ingredientsQuery.error && (
-        <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-6 text-sm text-red-700">
-          Não foi possível carregar os ingredientes.
+          {ingredientsQuery.error && (
+            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-6 text-sm text-red-700">
+              Não foi possível carregar os ingredientes.
+            </div>
+          )}
+
+          {ingredientsQuery.data && (
+            <IngredientPicker
+              ingredients={ingredientsQuery.data}
+              selectedIds={selectedIds}
+              onToggle={toggleIngredient}
+              search={search}
+              onSearchChange={setSearch}
+            />
+          )}
+        </aside>
+
+        <div className="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-[var(--line)] bg-white/60 p-4">
+          <RecipeResults
+            matches={matchesQuery.data ?? []}
+            ingredientNames={ingredientNames}
+            isLoading={matchesQuery.isFetching}
+            hasSelection={selectedIds.length > 0}
+            error={matchesQuery.error}
+          />
         </div>
-      )}
-
-      {ingredientsQuery.data && (
-        <IngredientPicker
-          ingredients={ingredientsQuery.data}
-          selectedIds={selectedIds}
-          onToggle={toggleIngredient}
-          search={search}
-          onSearchChange={setSearch}
-        />
-      )}
-
-      <RecipeResults
-        matches={matchesQuery.data ?? []}
-        ingredientNames={ingredientNames}
-        isLoading={matchesQuery.isFetching}
-        hasSelection={selectedIds.length > 0}
-        error={matchesQuery.error}
-      />
+      </div>
     </div>
   );
 }
