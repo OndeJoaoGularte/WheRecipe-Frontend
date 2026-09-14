@@ -1,27 +1,27 @@
 import Link from "next/link";
-import type { RecipeMatch } from "@/types/recipe";
+import { formatMinutes, formatServings } from "@/lib/format";
+import type { Recipe, RecipeMatch } from "@/types/recipe";
 
 type RecipeCardProps = {
-  match: RecipeMatch;
-  ingredientNames: Map<string, string>;
+  recipe: Recipe;
+  match?: Pick<
+    RecipeMatch,
+    "matchedIngredientIds" | "missingIngredientIds" | "isComplete" | "matchRatio"
+  >;
+  ingredientNames?: Map<string, string>;
 };
 
-function formatMinutes(total: number) {
-  if (total < 60) return `${total} min`;
-  const hours = Math.floor(total / 60);
-  const minutes = total % 60;
-  return minutes === 0 ? `${hours} h` : `${hours} h ${minutes} min`;
-}
-
-export default function RecipeCard({ match, ingredientNames }: RecipeCardProps) {
-  const { recipe, matchedIngredientIds, missingIngredientIds, isComplete, matchRatio } =
-    match;
+export default function RecipeCard({
+  recipe,
+  match,
+  ingredientNames,
+}: RecipeCardProps) {
   const totalMinutes = recipe.prepTimeMinutes + recipe.cookTimeMinutes;
-  const percent = Math.round(matchRatio * 100);
+  const percent = match ? Math.round(match.matchRatio * 100) : null;
 
   return (
     <Link
-      href={`/recipes/${recipe.id}`}
+      href={`/receitas/${recipe.id}`}
       className="group block rounded-2xl border border-[var(--line)] bg-white/75 p-4 transition hover:border-[var(--accent)] hover:bg-white hover:shadow-[0_10px_30px_rgba(249,115,22,0.12)]"
     >
       <div className="flex items-start justify-between gap-3">
@@ -33,33 +33,53 @@ export default function RecipeCard({ match, ingredientNames }: RecipeCardProps) 
             {recipe.description}
           </p>
         </div>
-        <span
-          className={
-            isComplete
-              ? "shrink-0 rounded-full bg-[var(--accent)] px-2.5 py-1 text-xs font-semibold text-white"
-              : "shrink-0 rounded-full bg-[var(--accent-soft)] px-2.5 py-1 text-xs font-semibold text-[var(--accent-strong)]"
-          }
-        >
-          {isComplete ? "Completa" : `${percent}%`}
-        </span>
+        {match && percent !== null && (
+          <span
+            className={
+              match.isComplete
+                ? "shrink-0 rounded-full bg-[var(--accent)] px-2.5 py-1 text-xs font-semibold text-white"
+                : "shrink-0 rounded-full bg-[var(--accent-soft)] px-2.5 py-1 text-xs font-semibold text-[var(--accent-strong)]"
+            }
+          >
+            {match.isComplete ? "Completa" : `${percent}%`}
+          </span>
+        )}
       </div>
 
       <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs text-[var(--muted)]">
         <span>{formatMinutes(totalMinutes)}</span>
         <span>·</span>
-        <span>{recipe.servings} porç{recipe.servings === 1 ? "ão" : "ões"}</span>
-        <span>·</span>
-        <span>
-          {matchedIngredientIds.length} de{" "}
-          {matchedIngredientIds.length + missingIngredientIds.length} ingredientes
-        </span>
+        <span>{formatServings(recipe.servings)}</span>
+        {match && (
+          <>
+            <span>·</span>
+            <span>
+              {match.matchedIngredientIds.length} de{" "}
+              {match.matchedIngredientIds.length + match.missingIngredientIds.length}{" "}
+              ingredientes
+            </span>
+          </>
+        )}
       </div>
 
-      {missingIngredientIds.length > 0 && (
+      {recipe.tags.length > 0 && !match && (
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {recipe.tags.map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full bg-[var(--accent-soft)] px-2 py-0.5 text-[11px] font-medium text-[var(--accent-strong)]"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {match && match.missingIngredientIds.length > 0 && (
         <p className="mt-3 text-xs text-[var(--warn)]">
           Falta:{" "}
-          {missingIngredientIds
-            .map((id) => ingredientNames.get(id) ?? id)
+          {match.missingIngredientIds
+            .map((id) => ingredientNames?.get(id) ?? id)
             .join(", ")}
         </p>
       )}

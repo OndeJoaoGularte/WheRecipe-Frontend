@@ -25,17 +25,8 @@ export default function HomePage() {
   }
 
   return (
-    <div className="flex h-dvh min-h-0 flex-col overflow-hidden px-4 py-4 sm:px-6 sm:py-5">
-      <header className="mx-auto w-full max-w-6xl shrink-0 pb-4">
-        <p className="font-display text-3xl font-bold tracking-tight text-[var(--secondary)] sm:text-4xl">
-          WheRecipe
-        </p>
-        <p className="mt-1 max-w-xl text-sm text-[var(--muted)] sm:text-base">
-          Descubra o que cozinhar com o que já tem em casa.
-        </p>
-      </header>
-
-      <div className="mx-auto grid min-h-0 w-full max-w-6xl flex-1 grid-cols-1 grid-rows-2 gap-4 lg:grid-cols-[minmax(280px,38%)_1fr] lg:grid-rows-1 lg:gap-6">
+    <div className="mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col overflow-hidden px-4 py-4 sm:px-6">
+      <div className="grid min-h-0 flex-1 grid-cols-1 grid-rows-2 gap-4 lg:grid-cols-[minmax(280px,38%)_1fr] lg:grid-rows-1 lg:gap-6">
         <aside className="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-[var(--line)] bg-white/60 p-4">
           {ingredientsQuery.isLoading && (
             <div className="h-full animate-pulse rounded-xl bg-[var(--accent-soft)]/60" />

@@ -1,7 +1,11 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { getRecipeById, getRecipesByIngredients } from "@/services/recipes";
+import {
+  getRecipeById,
+  getRecipesByIngredients,
+  listRecipes,
+} from "@/services/recipes";
 
 export function useRecipeMatches(ingredientIds: string[]) {
   const sortedIds = [...ingredientIds].sort();
@@ -18,5 +22,12 @@ export function useRecipe(id: string) {
     queryKey: ["recipes", id],
     queryFn: () => getRecipeById(id),
     enabled: Boolean(id),
+  });
+}
+
+export function useRecipeCatalog() {
+  return useQuery({
+    queryKey: ["recipes"],
+    queryFn: listRecipes,
   });
 }

@@ -77,11 +77,12 @@ export default function RecipeResults({
         {hasSelection && !isLoading && !error && matches.length > 0 && (
           <div className="space-y-3 pb-2">
             {matches.map((match) => (
-              <RecipeCard
-                key={match.recipe.id}
-                match={match}
-                ingredientNames={ingredientNames}
-              />
+            <RecipeCard
+              key={match.recipe.id}
+              recipe={match.recipe}
+              match={match}
+              ingredientNames={ingredientNames}
+            />
             ))}
           </div>
         )}
