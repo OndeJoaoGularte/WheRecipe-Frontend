@@ -240,6 +240,34 @@ export const mockRecipes: Recipe[] = [
     tags: ["café da manhã", "doce"],
   },
   {
+    id: "mingau-vegano",
+    title: "Mingau vegano de banana",
+    description:
+      "Mesma ideia do mingau clássico, mas só fecha se você tiver leite vegetal.",
+    servings: 1,
+    prepTimeMinutes: 5,
+    cookTimeMinutes: 8,
+    ingredients: [
+      { ingredientId: "banana", quantity: "1 unidade" },
+      { ingredientId: "aveia", quantity: "4 colheres de sopa" },
+      { ingredientId: "leite-vegetal", quantity: "1 xícara" },
+      { ingredientId: "canela", quantity: "a gosto", optional: true },
+    ],
+    steps: [
+      "Amasse a banana em uma panela.",
+      "Adicione o leite vegetal e a aveia e cozinhe em fogo baixo.",
+      "Mexa até engrossar e finalize com canela.",
+    ],
+    nutrition: {
+      calories: 290,
+      carbs: 50,
+      protein: 8,
+      fat: 5,
+      sugar: 16,
+    },
+    tags: ["café da manhã", "vegano"],
+  },
+  {
     id: "feijao-tropeiro-simples",
     title: "Feijão com ovo e cebola",
     description: "Inspiração mineira simplificada para o dia a dia.",

@@ -1,4 +1,6 @@
+import { mockIngredients } from "@/data/mocks/ingredients";
 import { mockRecipes } from "@/data/mocks/recipes";
+import { selectionCoversRequirement } from "@/lib/ingredients";
 import type { Recipe, RecipeMatch } from "@/types/recipe";
 import { delay } from "@/services/delay";
 
@@ -11,7 +13,7 @@ function buildMatch(
   const missingIngredientIds: string[] = [];
 
   for (const item of required) {
-    if (selectedIds.has(item.ingredientId)) {
+    if (selectionCoversRequirement(item.ingredientId, selectedIds, mockIngredients)) {
       matchedIngredientIds.push(item.ingredientId);
     } else {
       missingIngredientIds.push(item.ingredientId);

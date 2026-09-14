@@ -1,6 +1,33 @@
+export const INGREDIENT_CATEGORY_IDS = [
+  "laticinios",
+  "frios",
+  "carnes",
+  "graos",
+  "massas",
+  "legumes",
+  "frutas",
+  "temperos",
+  "oleos",
+  "mercearia",
+] as const;
+
+export type IngredientCategoryId = (typeof INGREDIENT_CATEGORY_IDS)[number];
+
+export type IngredientCategory = {
+  id: IngredientCategoryId;
+  name: string;
+};
+
+export type IngredientFamily = {
+  id: string;
+  name: string;
+};
+
 export type Ingredient = {
   id: string;
   name: string;
+  category: IngredientCategoryId;
+  family?: string;
   aliases?: string[];
 };
 

@@ -1,6 +1,7 @@
 import { mockIngredients } from "@/data/mocks/ingredients";
 import type { Ingredient } from "@/types/recipe";
 import { delay } from "@/services/delay";
+import { getIngredientNameMap as buildIngredientNameMap } from "@/lib/ingredients";
 
 export async function listIngredients(): Promise<Ingredient[]> {
   await delay();
@@ -17,5 +18,5 @@ export async function getIngredientById(
 export function getIngredientNameMap(
   ingredients: Ingredient[],
 ): Map<string, string> {
-  return new Map(ingredients.map((ingredient) => [ingredient.id, ingredient.name]));
+  return buildIngredientNameMap(ingredients);
 }

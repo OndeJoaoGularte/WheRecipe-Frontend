@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo, useState } from "react";
+import { groupIngredientsByCategory } from "@/lib/ingredients";
 import type { Ingredient } from "@/types/recipe";
 
 type IngredientPickerProps = {
@@ -17,21 +19,26 @@ export default function IngredientPicker({
   search,
   onSearchChange,
 }: IngredientPickerProps) {
+  const [openCategoryIds, setOpenCategoryIds] = useState<string[]>([]);
   const normalizedSearch = search.trim().toLowerCase();
+  const isSearching = normalizedSearch.length > 0;
 
-  const filtered = ingredients.filter((ingredient) => {
-    if (!normalizedSearch) return true;
-
-    const haystack = [ingredient.name, ...(ingredient.aliases ?? [])]
-      .join(" ")
-      .toLowerCase();
-
-    return haystack.includes(normalizedSearch);
-  });
+  const grouped = useMemo(
+    () => groupIngredientsByCategory(ingredients, search),
+    [ingredients, search],
+  );
 
   const selected = ingredients.filter((ingredient) =>
     selectedIds.includes(ingredient.id),
   );
+
+  function toggleCategory(id: string) {
+    setOpenCategoryIds((current) =>
+      current.includes(id)
+        ? current.filter((item) => item !== id)
+        : [...current, id],
+    );
+  }
 
   return (
     <section
@@ -47,7 +54,7 @@ export default function IngredientPicker({
             Ingredientes
           </h2>
           <p className="text-sm text-[var(--muted)]">
-            Busque e clique no que você tem em casa.
+            Abra uma categoria e clique no que você tem em casa.
           </p>
         </div>
 
@@ -57,7 +64,7 @@ export default function IngredientPicker({
             type="search"
             value={search}
             onChange={(event) => onSearchChange(event.target.value)}
-            placeholder="Buscar ingrediente..."
+            placeholder="Buscar ingrediente ou categoria..."
             className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-[var(--ink)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]"
           />
         </label>
@@ -80,29 +87,73 @@ export default function IngredientPicker({
       </div>
 
       <div className="mt-4 min-h-0 flex-1 overflow-y-auto pr-1">
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-1">
-          {filtered.map((ingredient) => {
-            const isSelected = selectedIds.includes(ingredient.id);
+        <div className="space-y-2">
+          {grouped.map(({ category, ingredients: items }) => {
+            const isOpen = isSearching || openCategoryIds.includes(category.id);
+            const selectedInCategory = items.filter((item) =>
+              selectedIds.includes(item.id),
+            ).length;
 
             return (
-              <button
-                key={ingredient.id}
-                type="button"
-                onClick={() => onToggle(ingredient.id)}
-                aria-pressed={isSelected}
-                className={
-                  isSelected
-                    ? "rounded-xl border border-[var(--accent)] bg-[var(--accent-soft)] px-3 py-2.5 text-left text-sm font-medium text-[var(--accent-strong)]"
-                    : "rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2.5 text-left text-sm text-[var(--ink)] transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)]"
-                }
+              <div
+                key={category.id}
+                className="overflow-hidden rounded-xl border border-[var(--line)] bg-white/70"
               >
-                {ingredient.name}
-              </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!isSearching) toggleCategory(category.id);
+                  }}
+                  aria-expanded={isOpen}
+                  className="flex w-full items-center justify-between gap-3 px-3 py-3 text-left"
+                >
+                  <span className="font-display text-sm font-semibold text-[var(--ink)]">
+                    {category.name}
+                  </span>
+                  <span className="flex items-center gap-2">
+                    {selectedInCategory > 0 && (
+                      <span className="rounded-full bg-[var(--accent-soft)] px-2 py-0.5 text-xs font-semibold text-[var(--accent-strong)]">
+                        {selectedInCategory}
+                      </span>
+                    )}
+                    <span
+                      aria-hidden="true"
+                      className={`text-[var(--muted)] transition ${isOpen ? "rotate-180" : ""}`}
+                    >
+                      ▾
+                    </span>
+                  </span>
+                </button>
+
+                {isOpen && (
+                  <div className="space-y-2 border-t border-[var(--line)] px-3 py-3">
+                    {items.map((ingredient) => {
+                      const isSelected = selectedIds.includes(ingredient.id);
+
+                      return (
+                        <button
+                          key={ingredient.id}
+                          type="button"
+                          onClick={() => onToggle(ingredient.id)}
+                          aria-pressed={isSelected}
+                          className={
+                            isSelected
+                              ? "w-full rounded-xl border border-[var(--accent)] bg-[var(--accent-soft)] px-3 py-2.5 text-left text-sm font-medium text-[var(--accent-strong)]"
+                              : "w-full rounded-xl border border-[var(--line)] bg-white/80 px-3 py-2.5 text-left text-sm text-[var(--ink)] transition hover:border-[var(--accent)] hover:bg-[var(--accent-soft)]"
+                          }
+                        >
+                          {ingredient.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>
 
-        {filtered.length === 0 && (
+        {grouped.length === 0 && (
           <p className="text-sm text-[var(--muted)]">
             Nenhum ingrediente encontrado para “{search}”.
           </p>
