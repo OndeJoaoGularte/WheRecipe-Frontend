@@ -1,18 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import IngredientPicker from "@/components/IngredientPicker";
 import RecipeResults from "@/components/RecipeResults";
 import { useIngredients } from "@/hooks/useIngredients";
 import { useRecipeMatches } from "@/hooks/useRecipes";
+import { useSelectedIngredients } from "@/hooks/useSelectedIngredients";
 import { getIngredientNameMap } from "@/services/ingredients";
 
 export default function HomePage() {
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [selectedIds, setSelectedIds] = useSelectedIngredients();
   const [search, setSearch] = useState("");
 
   const ingredientsQuery = useIngredients();
   const matchesQuery = useRecipeMatches(selectedIds);
+
+  useEffect(() => {
+    if (!ingredientsQuery.data) return;
+
+    const known = new Set(ingredientsQuery.data.map((ingredient) => ingredient.id));
+    const next = selectedIds.filter((id) => known.has(id));
+    if (next.length !== selectedIds.length) {
+      setSelectedIds(next);
+    }
+  }, [ingredientsQuery.data, selectedIds, setSelectedIds]);
 
   const ingredientNames = getIngredientNameMap(ingredientsQuery.data ?? []);
 
@@ -53,7 +64,7 @@ export default function HomePage() {
           <RecipeResults
             matches={matchesQuery.data ?? []}
             ingredientNames={ingredientNames}
-            isLoading={matchesQuery.isFetching}
+            isLoading={matchesQuery.isLoading}
             hasSelection={selectedIds.length > 0}
             error={matchesQuery.error}
           />
