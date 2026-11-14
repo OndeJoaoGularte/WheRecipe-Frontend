@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { use, useState } from "react";
 import CookedRecipeDialog from "@/components/CookedRecipeDialog";
+import { useIngredientMeta } from "@/hooks/useIngredientMeta";
 import { useIngredients } from "@/hooks/useIngredients";
 import { usePantry } from "@/hooks/usePantry";
 import { useRecipe } from "@/hooks/useRecipes";
@@ -18,11 +19,15 @@ export default function RecipeDetailPage({ params }: RecipeDetailPageProps) {
   const { id } = use(params);
   const recipeQuery = useRecipe(id);
   const ingredientsQuery = useIngredients();
+  const metaQuery = useIngredientMeta();
   const pantry = usePantry();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
 
-  const ingredientNames = getIngredientNameMap(ingredientsQuery.data ?? []);
+  const ingredientNames = getIngredientNameMap(
+    ingredientsQuery.data ?? [],
+    metaQuery.data?.families ?? [],
+  );
 
   if (recipeQuery.isLoading) {
     return (

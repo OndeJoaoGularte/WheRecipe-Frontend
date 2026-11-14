@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import RecipeResults from "@/components/RecipeResults";
+import { useIngredientMeta } from "@/hooks/useIngredientMeta";
 import { useIngredients } from "@/hooks/useIngredients";
 import { usePantry } from "@/hooks/usePantry";
 import { useRecipeMatches } from "@/hooks/useRecipes";
@@ -9,9 +10,13 @@ import { getIngredientNameMap } from "@/services/ingredients";
 
 export default function CookFromPantryPage() {
   const ingredientsQuery = useIngredients();
+  const metaQuery = useIngredientMeta();
   const pantry = usePantry();
   const matchesQuery = useRecipeMatches(pantry.ingredientIds);
-  const ingredientNames = getIngredientNameMap(ingredientsQuery.data ?? []);
+  const ingredientNames = getIngredientNameMap(
+    ingredientsQuery.data ?? [],
+    metaQuery.data?.families ?? [],
+  );
   const hasItems = pantry.ingredientIds.length > 0;
 
   return (

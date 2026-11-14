@@ -1,89 +1,89 @@
-import { readJson, removeKey, writeJson } from "@/lib/storage";
-import { delay } from "@/services/delay";
-import type {
-  AuthCredentials,
-  RegisterInput,
-  User,
-  UserRecord,
-} from "@/types/user";
+import { ApiError, apiFetch, getAccessToken, setAccessToken } from "@/lib/api";
+import type { AuthCredentials, RegisterInput, User } from "@/types/user";
 
-const USERS_KEY = "wherecipe.users";
-const SESSION_KEY = "wherecipe.session";
-
-function toPublicUser(record: UserRecord): User {
-  return {
-    id: record.id,
-    name: record.name,
-    email: record.email,
+type AuthPayload = {
+  user: {
+    id: string;
+    name: string;
+    fullName?: string | null;
+    email: string;
   };
-}
+  token: string;
+};
 
-function listUsers(): UserRecord[] {
-  return readJson<UserRecord[]>(USERS_KEY, []);
-}
+type ProfilePayload = {
+  id: string;
+  name: string;
+  fullName?: string | null;
+  email: string;
+};
 
-function saveUsers(users: UserRecord[]) {
-  writeJson(USERS_KEY, users);
-}
+type Wrapped<T> = { data: T };
 
-function normalizeEmail(email: string) {
-  return email.trim().toLowerCase();
+function toUser(payload: {
+  id: string;
+  name?: string;
+  fullName?: string | null;
+  email: string;
+}): User {
+  return {
+    id: String(payload.id),
+    name: payload.name || payload.fullName || "",
+    email: payload.email,
+  };
 }
 
 export async function getCurrentUser(): Promise<User | null> {
-  await delay(150);
-  const userId = readJson<string | null>(SESSION_KEY, null);
-  if (!userId) return null;
+  if (!getAccessToken()) return null;
 
-  const user = listUsers().find((item) => item.id === userId);
-  return user ? toPublicUser(user) : null;
+  try {
+    const response = await apiFetch<Wrapped<ProfilePayload>>("/account/profile");
+    return toUser(response.data);
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 401) {
+      setAccessToken(null);
+    }
+    return null;
+  }
 }
 
 export async function registerUser(input: RegisterInput): Promise<User> {
-  await delay(350);
-
   const name = input.name.trim();
-  const email = normalizeEmail(input.email);
+  const email = input.email.trim().toLowerCase();
   const password = input.password;
 
   if (!name || !email || password.length < 4) {
-    throw new Error("Preencha nome, e-mail e uma senha com pelo menos 4 caracteres.");
+    throw new Error(
+      "Preencha nome, e-mail e uma senha com pelo menos 4 caracteres.",
+    );
   }
 
-  const users = listUsers();
-  if (users.some((user) => user.email === email)) {
-    throw new Error("Já existe uma conta com este e-mail.");
-  }
+  const response = await apiFetch<Wrapped<AuthPayload>>("/auth/signup", {
+    method: "POST",
+    body: JSON.stringify({ name, email, password }),
+  });
 
-  const record: UserRecord = {
-    id: crypto.randomUUID(),
-    name,
-    email,
-    password,
-  };
-
-  saveUsers([...users, record]);
-  writeJson(SESSION_KEY, record.id);
-  return toPublicUser(record);
+  setAccessToken(response.data.token);
+  return toUser(response.data.user);
 }
 
 export async function loginUser(credentials: AuthCredentials): Promise<User> {
-  await delay(350);
+  const response = await apiFetch<Wrapped<AuthPayload>>("/auth/login", {
+    method: "POST",
+    body: JSON.stringify({
+      email: credentials.email.trim().toLowerCase(),
+      password: credentials.password,
+    }),
+  });
 
-  const email = normalizeEmail(credentials.email);
-  const user = listUsers().find(
-    (item) => item.email === email && item.password === credentials.password,
-  );
-
-  if (!user) {
-    throw new Error("E-mail ou senha incorretos.");
-  }
-
-  writeJson(SESSION_KEY, user.id);
-  return toPublicUser(user);
+  setAccessToken(response.data.token);
+  return toUser(response.data.user);
 }
 
 export async function logoutUser(): Promise<void> {
-  await delay(100);
-  removeKey(SESSION_KEY);
+  try {
+    await apiFetch<{ message: string }>("/account/logout", { method: "POST" });
+  } finally {
+    setAccessToken(null);
+  }
 }

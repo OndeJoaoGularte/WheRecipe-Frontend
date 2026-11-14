@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍳 Aplicativo: WheRecipe — Front-end
 
-## Getting Started
+![Next.js](https://img.shields.io/badge/Next.js-000000?logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind-38BDF8?logo=tailwindcss&logoColor=white)
+![Contexto](https://img.shields.io/badge/Contexto-Projeto%20Pessoal-blueviolet)
+![Status](https://img.shields.io/badge/Status-Em%20andamento-yellow)
 
-First, run the development server:
+Interface do **WheRecipe**, um aplicativo pessoal para facilitar o dia a dia na cozinha: encontrar receitas com o que você já tem em casa. Este repositório concentra o Front-end, consumindo a API do [Back-end](https://github.com/OndeJoaoGularte/WheRecipe-Backend).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎯 Objetivo do Projeto
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Oferecer uma experiência simples e prática para cadastrar a despensa, descobrir receitas compatíveis com o que já está em casa e acompanhar o preparo, reduzindo desperdício e a dúvida do “o que cozinhar hoje?”.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🚀 Funcionalidades
 
-To learn more about Next.js, take a look at the following resources:
+1. **Landing e autenticação:** Apresentação do app, cadastro, login e área logada protegida.
+2. **Despensa:** Cadastro e gestão dos itens disponíveis em casa, com quantidades.
+3. **Cozinhar com a despensa:** Sugestões de receitas com base no que está salvo, mostrando cobertura e ingredientes faltantes.
+4. **Catálogo de receitas:** Exploração do acervo, filtros por tags e abertura do modo de preparo.
+5. **Atualização pós-receita:** Fluxo para baixar itens da despensa depois de cozinhar.
+6. **Planner da semana:** Tela em evolução para organizar o cardápio semanal.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🛠️ Tecnologias Utilizadas
 
-## Deploy on Vercel
+* **Next.js 16:** Framework React com App Router para as páginas e a navegação.
+* **React 19:** Biblioteca de interface dos fluxos de despensa, receitas e autenticação.
+* **TypeScript:** Tipagem dos serviços, hooks e entidades do domínio.
+* **TanStack Query:** Cache e sincronização dos dados vindos da API.
+* **Tailwind CSS 4:** Estilização utilitária da interface.
+* **React Compiler (Babel plugin):** Otimização de renderização no setup do projeto.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🧠 Conceitos Aplicados
+
+* **App Router do Next.js:** Organização por rotas (`entrar`, `cadastro`, `despensa`, `cozinhar`, `receitas`, `semana`) com layout autenticado.
+* **Auth no client:** Provider de autenticação, gate de rotas privadas e integração com os tokens da API.
+* **Data fetching com hooks:** Hooks (`usePantry`, `useRecipes`, `useIngredients`) sobre React Query para o domínio da cozinha.
+* **UX orientada a decisão:** Cards de match com percentual de cobertura e indicação do que falta para completar a receita.
+* **Componentização:** Páginas e painéis reutilizáveis (despensa, catálogo, resultados de match, diálogo pós-receita).

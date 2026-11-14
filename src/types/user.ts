@@ -4,10 +4,6 @@ export type User = {
   email: string;
 };
 
-export type UserRecord = User & {
-  password: string;
-};
-
 export type AuthCredentials = {
   email: string;
   password: string;

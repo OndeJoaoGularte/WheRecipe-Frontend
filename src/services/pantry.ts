@@ -1,86 +1,50 @@
-import { readJson, writeJson } from "@/lib/storage";
-import { delay } from "@/services/delay";
+import { apiFetch } from "@/lib/api";
 import type { PantryItem, PantryUpdate } from "@/types/pantry";
 
-function storageKey(userId: string) {
-  return `wherecipe.pantry.${userId}`;
-}
+type PantryResponse = { data: PantryItem[] };
 
-export async function getPantry(userId: string): Promise<PantryItem[]> {
-  await delay(100);
-  return readJson<PantryItem[]>(storageKey(userId), []);
-}
-
-function writePantry(userId: string, items: PantryItem[]): PantryItem[] {
-  const cleaned = items
-    .map((item) => ({
-      ingredientId: item.ingredientId,
-      quantity: item.quantity.trim(),
-    }))
-    .filter((item) => item.ingredientId && item.quantity);
-
-  writeJson(storageKey(userId), cleaned);
-  return cleaned;
-}
-
-export async function setPantry(
-  userId: string,
-  items: PantryItem[],
-): Promise<PantryItem[]> {
-  await delay(150);
-  return writePantry(userId, items);
+export async function getPantry(_userId?: string): Promise<PantryItem[]> {
+  const response = await apiFetch<PantryResponse>("/pantry");
+  return response.data;
 }
 
 export async function upsertPantryItem(
-  userId: string,
+  _userId: string | undefined,
   item: PantryItem,
 ): Promise<PantryItem[]> {
-  await delay(150);
-  const current = readJson<PantryItem[]>(storageKey(userId), []);
   const quantity = item.quantity.trim();
   if (!quantity) {
-    return writePantry(
-      userId,
-      current.filter((entry) => entry.ingredientId !== item.ingredientId),
-    );
+    return removePantryItem(_userId, item.ingredientId);
   }
 
-  const next = current.filter((entry) => entry.ingredientId !== item.ingredientId);
-  next.push({ ingredientId: item.ingredientId, quantity });
-  return writePantry(userId, next);
+  const response = await apiFetch<PantryResponse>("/pantry/items", {
+    method: "PUT",
+    body: JSON.stringify({
+      ingredientId: item.ingredientId,
+      quantity,
+    }),
+  });
+  return response.data;
 }
 
 export async function removePantryItem(
-  userId: string,
+  _userId: string | undefined,
   ingredientId: string,
 ): Promise<PantryItem[]> {
-  await delay(150);
-  const current = readJson<PantryItem[]>(storageKey(userId), []);
-  return writePantry(
-    userId,
-    current.filter((item) => item.ingredientId !== ingredientId),
+  const response = await apiFetch<PantryResponse>(
+    `/pantry/items/${encodeURIComponent(ingredientId)}`,
+    { method: "DELETE" },
   );
+  return response.data;
 }
 
 export async function applyPantryUpdates(
-  userId: string,
+  _userId: string | undefined,
   updates: PantryUpdate[],
 ): Promise<PantryItem[]> {
-  await delay(150);
-  const current = readJson<PantryItem[]>(storageKey(userId), []);
-  const byId = new Map(current.map((item) => [item.ingredientId, item]));
-
-  for (const update of updates) {
-    if (update.quantity === null || update.quantity.trim() === "") {
-      byId.delete(update.ingredientId);
-      continue;
-    }
-
-    byId.set(update.ingredientId, {
-      ingredientId: update.ingredientId,
-      quantity: update.quantity.trim(),
-    });
-  }
-
-  return writePantry(userId, [...byId.values()]);
+  const response = await apiFetch<PantryResponse>("/pantry/apply", {
+    method: "POST",
+    body: JSON.stringify({ updates }),
+  });
+  return response.data;
 }

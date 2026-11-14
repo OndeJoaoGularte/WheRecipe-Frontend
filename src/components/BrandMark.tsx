@@ -29,14 +29,19 @@ export default function BrandMark({
 
   const content = (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
-      <Image
-        src={src}
-        alt=""
-        width={box}
-        height={box}
-        className={`shrink-0 object-contain ${rounded}`}
-        priority
-      />
+      <span
+        className={`relative shrink-0 overflow-hidden ${rounded}`}
+        style={{ width: box, height: box }}
+      >
+        <Image
+          src={src}
+          alt=""
+          fill
+          sizes={`${box}px`}
+          className="object-contain"
+          priority
+        />
+      </span>
       {showWordmark ? (
         <span
           className={`font-display font-bold tracking-tight text-[var(--secondary)] ${text}`}

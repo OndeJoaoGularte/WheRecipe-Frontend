@@ -1,6 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import BrandMark from "@/components/BrandMark";
+import { useRouter } from "next/navigation";
+import SiteHeaderBar from "@/components/SiteHeaderBar";
+import { useAuth } from "@/providers/AuthProvider";
 
 const steps = [
   {
@@ -36,33 +40,68 @@ const features = [
 ];
 
 export default function LandingPage() {
+  const { user, isLoading, logout } = useAuth();
+  const router = useRouter();
+  const isLoggedIn = Boolean(user);
+
+  async function handleLogout() {
+    await logout();
+    router.refresh();
+  }
+
   return (
     <div className="min-h-dvh">
-      <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 sm:px-6">
-        <BrandMark href="/" size="sm" />
-        <div className="flex items-center gap-2">
-          <Link
-            href="/entrar"
-            className="rounded-full px-4 py-2 text-sm font-semibold text-[var(--secondary)] transition hover:bg-[var(--accent-soft)]"
-          >
-            Entrar
-          </Link>
-          <Link
-            href="/cadastro"
-            className="rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--accent-strong)]"
-          >
-            Criar conta
-          </Link>
+      <SiteHeaderBar>
+        <div className="flex items-center gap-2 sm:gap-3">
+          {isLoading ? (
+            <div className="h-8 w-36 animate-pulse rounded-full bg-[var(--accent-soft)]/70" />
+          ) : isLoggedIn ? (
+            <>
+              <Link
+                href="/despensa"
+                className="rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--accent-strong)]"
+              >
+                Abrir despensa
+              </Link>
+              <div className="flex items-center gap-2 border-l border-[var(--line)] pl-2 sm:pl-3">
+                <span className="hidden max-w-28 truncate text-xs text-[var(--muted)] sm:inline">
+                  {user?.name}
+                </span>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="rounded-full px-2.5 py-1 text-xs font-medium text-[var(--secondary)] hover:bg-[var(--accent-soft)]"
+                >
+                  Sair
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/entrar"
+                className="rounded-full px-4 py-2 text-sm font-semibold text-[var(--secondary)] transition hover:bg-[var(--accent-soft)]"
+              >
+                Entrar
+              </Link>
+              <Link
+                href="/cadastro"
+                className="rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--accent-strong)]"
+              >
+                Criar conta
+              </Link>
+            </>
+          )}
         </div>
-      </header>
+      </SiteHeaderBar>
 
-      <section className="mx-auto flex min-h-[calc(100dvh-5.5rem)] w-full max-w-3xl flex-col items-center justify-center px-4 text-center sm:px-6">
+      <section className="mx-auto flex min-h-[calc(100dvh-4rem)] w-full max-w-3xl flex-col items-center justify-center px-4 text-center sm:px-6">
         <Image
           src="/brand/logo-mark.png"
           alt="WheRecipe"
           width={112}
           height={112}
-          className="rounded-3xl shadow-[0_16px_40px_rgba(74,84,137,0.28)]"
+          className="h-[112px] w-auto rounded-3xl shadow-[0_16px_40px_rgba(74,84,137,0.28)]"
           priority
         />
         <p className="mt-6 font-display text-4xl font-bold tracking-tight text-[var(--secondary)] sm:text-5xl">
@@ -75,19 +114,40 @@ export default function LandingPage() {
           Cadastre sua despensa, descubra receitas e atualize os itens com
           calma — nada desaparece sem a sua confirmação.
         </p>
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <Link
-            href="/cadastro"
-            className="rounded-full bg-[var(--accent)] px-8 py-3.5 text-base font-semibold text-white shadow-[0_12px_30px_rgba(244,121,32,0.28)] transition hover:bg-[var(--accent-strong)]"
-          >
-            Começar agora
-          </Link>
-          <Link
-            href="/entrar"
-            className="rounded-full border border-[var(--line)] bg-white/70 px-6 py-3.5 text-base font-semibold text-[var(--secondary)] transition hover:border-[var(--accent)]"
-          >
-            Já tenho conta
-          </Link>
+        <div className="mt-10 flex min-h-12 flex-wrap items-center justify-center gap-3">
+          {isLoading ? (
+            <div className="h-12 w-64 animate-pulse rounded-full bg-[var(--accent-soft)]/70" />
+          ) : isLoggedIn ? (
+            <>
+              <Link
+                href="/despensa"
+                className="rounded-full bg-[var(--accent)] px-8 py-3.5 text-base font-semibold text-white shadow-[0_12px_30px_rgba(244,121,32,0.28)] transition hover:bg-[var(--accent-strong)]"
+              >
+                Ir para a despensa
+              </Link>
+              <Link
+                href="/cozinhar"
+                className="rounded-full border border-[var(--line)] bg-white/70 px-6 py-3.5 text-base font-semibold text-[var(--secondary)] transition hover:border-[var(--accent)]"
+              >
+                Fazer receita
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/cadastro"
+                className="rounded-full bg-[var(--accent)] px-8 py-3.5 text-base font-semibold text-white shadow-[0_12px_30px_rgba(244,121,32,0.28)] transition hover:bg-[var(--accent-strong)]"
+              >
+                Começar agora
+              </Link>
+              <Link
+                href="/entrar"
+                className="rounded-full border border-[var(--line)] bg-white/70 px-6 py-3.5 text-base font-semibold text-[var(--secondary)] transition hover:border-[var(--accent)]"
+              >
+                Já tenho conta
+              </Link>
+            </>
+          )}
         </div>
         <a
           href="#como-funciona"
@@ -138,7 +198,7 @@ export default function LandingPage() {
           {features.map((feature) => (
             <Link
               key={feature.href}
-              href="/entrar"
+              href={isLoggedIn ? feature.href : "/entrar"}
               className="rounded-2xl border border-[var(--line)] bg-white/70 p-5 transition hover:border-[var(--accent)] hover:bg-white"
             >
               <h3 className="font-display text-xl font-semibold text-[var(--secondary)]">

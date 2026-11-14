@@ -2,11 +2,16 @@
 
 import Link from "next/link";
 import { useMemo } from "react";
-import { ingredientCategories } from "@/data/mocks/categories";
+import { useIngredientMeta } from "@/hooks/useIngredientMeta";
 import { useIngredients } from "@/hooks/useIngredients";
 import { useRecipeCatalog } from "@/hooks/useRecipes";
 import { getIngredientNameMap } from "@/services/ingredients";
-import type { Ingredient, Recipe } from "@/types/recipe";
+import type {
+  Ingredient,
+  IngredientCategory,
+  IngredientFamily,
+  Recipe,
+} from "@/types/recipe";
 
 const WEEK_DAYS = [
   { id: "segunda", label: "Segunda" },
@@ -41,8 +46,13 @@ function categoryForIngredient(
   return familyMember?.category ?? "mercearia";
 }
 
-function buildShoppingList(recipes: Recipe[], ingredients: Ingredient[]) {
-  const names = getIngredientNameMap(ingredients);
+function buildShoppingList(
+  recipes: Recipe[],
+  ingredients: Ingredient[],
+  categories: IngredientCategory[],
+  families: IngredientFamily[],
+) {
+  const names = getIngredientNameMap(ingredients, families);
   const grouped = new Map<string, { name: string; quantities: string[] }[]>();
 
   for (const recipe of recipes) {
@@ -51,7 +61,10 @@ function buildShoppingList(recipes: Recipe[], ingredients: Ingredient[]) {
 
       const category = categoryForIngredient(item.ingredientId, ingredients);
       const list = grouped.get(category) ?? [];
-      const existing = list.find((entry) => entry.name === (names.get(item.ingredientId) ?? item.ingredientId));
+      const existing = list.find(
+        (entry) =>
+          entry.name === (names.get(item.ingredientId) ?? item.ingredientId),
+      );
 
       if (existing) {
         existing.quantities.push(`${item.quantity} (${recipe.title})`);
@@ -66,7 +79,7 @@ function buildShoppingList(recipes: Recipe[], ingredients: Ingredient[]) {
     }
   }
 
-  return ingredientCategories
+  return categories
     .map((category) => ({
       category,
       items: grouped.get(category.id) ?? [],
@@ -77,9 +90,12 @@ function buildShoppingList(recipes: Recipe[], ingredients: Ingredient[]) {
 export default function WeekPlannerPage() {
   const recipesQuery = useRecipeCatalog();
   const ingredientsQuery = useIngredients();
+  const metaQuery = useIngredientMeta();
 
   const recipesById = useMemo(() => {
-    return new Map((recipesQuery.data ?? []).map((recipe) => [recipe.id, recipe]));
+    return new Map(
+      (recipesQuery.data ?? []).map((recipe) => [recipe.id, recipe]),
+    );
   }, [recipesQuery.data]);
 
   const selectedRecipes = useMemo(() => {
@@ -92,9 +108,14 @@ export default function WeekPlannerPage() {
   }, [recipesById]);
 
   const shoppingList = useMemo(() => {
-    if (!ingredientsQuery.data) return [];
-    return buildShoppingList(selectedRecipes, ingredientsQuery.data);
-  }, [ingredientsQuery.data, selectedRecipes]);
+    if (!ingredientsQuery.data || !metaQuery.data) return [];
+    return buildShoppingList(
+      selectedRecipes,
+      ingredientsQuery.data,
+      metaQuery.data.categories,
+      metaQuery.data.families,
+    );
+  }, [ingredientsQuery.data, metaQuery.data, selectedRecipes]);
 
   return (
     <div className="mx-auto grid min-h-0 w-full max-w-6xl flex-1 grid-cols-1 grid-rows-2 gap-4 overflow-hidden px-4 py-4 sm:px-6 lg:grid-cols-[minmax(320px,1.1fr)_minmax(280px,0.9fr)] lg:grid-rows-1">

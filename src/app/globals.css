@@ -22,6 +22,11 @@
   --font-display: var(--font-quicksand);
 }
 
+html {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
+
 html,
 body {
   min-height: 100%;

@@ -2,11 +2,12 @@
 
 import { useMemo, useState } from "react";
 import { groupIngredientsByCategory } from "@/lib/ingredients";
-import type { Ingredient } from "@/types/recipe";
+import type { Ingredient, IngredientCategory } from "@/types/recipe";
 import type { PantryItem } from "@/types/pantry";
 
 type PantryPanelProps = {
   ingredients: Ingredient[];
+  categories: IngredientCategory[];
   items: PantryItem[];
   onUpsert: (item: PantryItem) => void;
   onRemove: (ingredientId: string) => void;
@@ -15,6 +16,7 @@ type PantryPanelProps = {
 
 export default function PantryPanel({
   ingredients,
+  categories,
   items,
   onUpsert,
   onRemove,
@@ -43,8 +45,8 @@ export default function PantryPanel({
   );
 
   const groupedAvailable = useMemo(
-    () => groupIngredientsByCategory(available, search),
-    [available, search],
+    () => groupIngredientsByCategory(available, categories, search),
+    [available, categories, search],
   );
 
   const isSearching = search.trim().length > 0;

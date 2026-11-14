@@ -2,10 +2,11 @@
 
 import { useMemo, useState } from "react";
 import { groupIngredientsByCategory } from "@/lib/ingredients";
-import type { Ingredient } from "@/types/recipe";
+import type { Ingredient, IngredientCategory } from "@/types/recipe";
 
 type IngredientPickerProps = {
   ingredients: Ingredient[];
+  categories: IngredientCategory[];
   selectedIds: string[];
   onToggle: (id: string) => void;
   search: string;
@@ -14,6 +15,7 @@ type IngredientPickerProps = {
 
 export default function IngredientPicker({
   ingredients,
+  categories,
   selectedIds,
   onToggle,
   search,
@@ -24,8 +26,8 @@ export default function IngredientPicker({
   const isSearching = normalizedSearch.length > 0;
 
   const grouped = useMemo(
-    () => groupIngredientsByCategory(ingredients, search),
-    [ingredients, search],
+    () => groupIngredientsByCategory(ingredients, categories, search),
+    [ingredients, categories, search],
   );
 
   const selected = ingredients.filter((ingredient) =>

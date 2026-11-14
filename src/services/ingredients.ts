@@ -1,22 +1,49 @@
-import { mockIngredients } from "@/data/mocks/ingredients";
-import type { Ingredient } from "@/types/recipe";
-import { delay } from "@/services/delay";
+import { apiFetch } from "@/lib/api";
 import { getIngredientNameMap as buildIngredientNameMap } from "@/lib/ingredients";
+import type {
+  Ingredient,
+  IngredientCategory,
+  IngredientFamily,
+} from "@/types/recipe";
+
+type ListResponse = { data: Ingredient[] };
+type MetaResponse = {
+  data: {
+    categories: IngredientCategory[];
+    families: IngredientFamily[];
+  };
+};
+type ItemResponse = { data: Ingredient };
 
 export async function listIngredients(): Promise<Ingredient[]> {
-  await delay();
-  return mockIngredients;
+  const response = await apiFetch<ListResponse>("/ingredients");
+  return response.data;
 }
 
 export async function getIngredientById(
   id: string,
 ): Promise<Ingredient | undefined> {
-  await delay(200);
-  return mockIngredients.find((ingredient) => ingredient.id === id);
+  try {
+    const response = await apiFetch<ItemResponse>(
+      `/ingredients/${encodeURIComponent(id)}`,
+    );
+    return response.data;
+  } catch {
+    return undefined;
+  }
+}
+
+export async function getIngredientMeta(): Promise<{
+  categories: IngredientCategory[];
+  families: IngredientFamily[];
+}> {
+  const response = await apiFetch<MetaResponse>("/ingredients/meta");
+  return response.data;
 }
 
 export function getIngredientNameMap(
   ingredients: Ingredient[],
+  families: IngredientFamily[] = [],
 ): Map<string, string> {
-  return buildIngredientNameMap(ingredients);
+  return buildIngredientNameMap(ingredients, families);
 }

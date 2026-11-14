@@ -1,22 +1,32 @@
-import { mockIngredients } from "@/data/mocks/ingredients";
-import { mockRecipes } from "@/data/mocks/recipes";
-import { matchRecipes } from "@/lib/matchRecipes";
+import { apiFetch } from "@/lib/api";
 import type { Recipe, RecipeMatch } from "@/types/recipe";
-import { delay } from "@/services/delay";
+
+type ListResponse = { data: Recipe[] };
+type ItemResponse = { data: Recipe };
+type MatchResponse = { data: RecipeMatch[] };
 
 export async function getRecipesByIngredients(
   ingredientIds: string[],
 ): Promise<RecipeMatch[]> {
-  await delay();
-  return matchRecipes(mockRecipes, ingredientIds, mockIngredients);
+  const response = await apiFetch<MatchResponse>("/recipes/match", {
+    method: "POST",
+    body: JSON.stringify({ ingredientIds }),
+  });
+  return response.data;
 }
 
 export async function getRecipeById(id: string): Promise<Recipe | undefined> {
-  await delay();
-  return mockRecipes.find((recipe) => recipe.id === id);
+  try {
+    const response = await apiFetch<ItemResponse>(
+      `/recipes/${encodeURIComponent(id)}`,
+    );
+    return response.data;
+  } catch {
+    return undefined;
+  }
 }
 
 export async function listRecipes(): Promise<Recipe[]> {
-  await delay();
-  return mockRecipes;
+  const response = await apiFetch<ListResponse>("/recipes");
+  return response.data;
 }

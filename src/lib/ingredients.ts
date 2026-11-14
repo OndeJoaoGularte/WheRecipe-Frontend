@@ -1,10 +1,14 @@
-import { ingredientCategories, ingredientFamilies } from "@/data/mocks/categories";
-import type { Ingredient, IngredientCategory } from "@/types/recipe";
+import type {
+  Ingredient,
+  IngredientCategory,
+  IngredientFamily,
+} from "@/types/recipe";
 
 export function getIngredientNameMap(
   ingredients: Ingredient[],
+  families: IngredientFamily[] = [],
 ): Map<string, string> {
-  const map = new Map(ingredientFamilies.map((family) => [family.id, family.name]));
+  const map = new Map(families.map((family) => [family.id, family.name]));
 
   for (const ingredient of ingredients) {
     map.set(ingredient.id, ingredient.name);
@@ -34,11 +38,12 @@ export function ingredientMatchesQuery(
 
 export function groupIngredientsByCategory(
   ingredients: Ingredient[],
+  categories: IngredientCategory[],
   query = "",
 ): Array<{ category: IngredientCategory; ingredients: Ingredient[] }> {
   const normalizedQuery = query.trim().toLowerCase();
 
-  return ingredientCategories.flatMap((category) => {
+  return categories.flatMap((category) => {
     const items = ingredients.filter((ingredient) => {
       if (ingredient.category !== category.id) return false;
       return ingredientMatchesQuery(ingredient, normalizedQuery, category.name);
