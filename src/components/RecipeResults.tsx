@@ -28,14 +28,14 @@ export default function RecipeResults({
           id="results-heading"
           className="font-display text-xl font-semibold text-[var(--ink)]"
         >
-          Receitas
+          Sugestões
         </h2>
         <p className="text-sm text-[var(--muted)]">
           {hasSelection
             ? isLoading
-              ? "Buscando receitas com os ingredientes selecionados..."
-              : `${matches.length} ${matches.length === 1 ? "opção" : "opções"} com o que você selecionou.`
-            : "As sugestões aparecem aqui conforme você escolhe os ingredientes."}
+              ? "Buscando receitas com a sua despensa..."
+              : `${matches.length} ${matches.length === 1 ? "opção" : "opções"} com o que você tem.`
+            : "Cadastre itens na despensa para ver sugestões."}
         </p>
       </div>
 
@@ -43,7 +43,7 @@ export default function RecipeResults({
         {!hasSelection && (
           <div className="flex h-full min-h-40 items-center justify-center rounded-2xl border border-dashed border-[var(--line)] bg-white/50 px-4 py-8 text-center">
             <p className="text-sm text-[var(--muted)]">
-              Selecione pelo menos um ingrediente para ver receitas.
+              Cadastre pelo menos um item na despensa para ver sugestões.
             </p>
           </div>
         )}
