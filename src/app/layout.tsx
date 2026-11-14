@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Quicksand, Spline_Sans } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/providers/AuthProvider";
 import QueryProvider from "@/providers/QueryProvider";
 
 const quicksand = Quicksand({
@@ -16,6 +17,10 @@ const splineSans = Spline_Sans({
 export const metadata: Metadata = {
   title: "WheRecipe",
   description: "Descubra receitas com os ingredientes que você tem em casa.",
+  icons: {
+    icon: "/brand/logo.png",
+    apple: "/brand/logo-mark.png",
+  },
 };
 
 export default function RootLayout({
@@ -26,7 +31,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${quicksand.variable} ${splineSans.variable} antialiased`}>
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </QueryProvider>
       </body>
     </html>
   );
