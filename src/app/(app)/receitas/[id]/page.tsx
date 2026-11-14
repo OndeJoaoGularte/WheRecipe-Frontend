@@ -1,11 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { use } from "react";
+import { use, useState } from "react";
+import CookedRecipeDialog from "@/components/CookedRecipeDialog";
 import { useIngredients } from "@/hooks/useIngredients";
+import { usePantry } from "@/hooks/usePantry";
 import { useRecipe } from "@/hooks/useRecipes";
 import { formatMinutes, formatServings } from "@/lib/format";
 import { getIngredientNameMap } from "@/services/ingredients";
+import type { PantryUpdate } from "@/types/pantry";
 
 type RecipeDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -15,6 +18,10 @@ export default function RecipeDetailPage({ params }: RecipeDetailPageProps) {
   const { id } = use(params);
   const recipeQuery = useRecipe(id);
   const ingredientsQuery = useIngredients();
+  const pantry = usePantry();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
+
   const ingredientNames = getIngredientNameMap(ingredientsQuery.data ?? []);
 
   if (recipeQuery.isLoading) {
@@ -54,6 +61,19 @@ export default function RecipeDetailPage({ params }: RecipeDetailPageProps) {
   }
 
   const totalMinutes = recipe.prepTimeMinutes + recipe.cookTimeMinutes;
+
+  function handleConfirm(updates: PantryUpdate[]) {
+    pantry.applyUpdates.mutate(updates, {
+      onSuccess: () => {
+        setDialogOpen(false);
+        setFeedback(
+          updates.length === 0
+            ? "Nenhuma alteração na despensa."
+            : "Despensa atualizada com a sua escolha.",
+        );
+      },
+    });
+  }
 
   return (
     <div className="min-h-0 flex-1 overflow-y-auto px-4 py-8 sm:px-6">
@@ -116,32 +136,43 @@ export default function RecipeDetailPage({ params }: RecipeDetailPageProps) {
           </ol>
         </section>
 
-        <section className="mt-8 space-y-3">
-          <h2 className="font-display text-xl text-[var(--ink)]">Nutrição (média)</h2>
+        <div className="mt-10 space-y-3 rounded-2xl border border-[var(--line)] bg-white/70 p-4">
+          <h2 className="font-display text-lg font-semibold text-[var(--ink)]">
+            Fiz esta receita
+          </h2>
           <p className="text-sm text-[var(--muted)]">
-            Valores aproximados para {formatServings(recipe.servings)} no total.
+            Vamos sugerir o que baixar da despensa. Você confirma cada item e pode
+            deixar sobras como 1/2 pacote.
           </p>
-          <dl className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-            {(
-              [
-                ["Calorias", `${recipe.nutrition.calories} kcal`],
-                ["Carboidratos", `${recipe.nutrition.carbs} g`],
-                ["Proteínas", `${recipe.nutrition.protein} g`],
-                ["Gorduras", `${recipe.nutrition.fat} g`],
-                ["Açúcar", `${recipe.nutrition.sugar} g`],
-              ] as const
-            ).map(([label, value]) => (
-              <div
-                key={label}
-                className="rounded-xl border border-[var(--line)] bg-white/70 px-3 py-3"
-              >
-                <dt className="text-xs text-[var(--muted)]">{label}</dt>
-                <dd className="mt-1 text-sm font-semibold text-[var(--ink)]">{value}</dd>
-              </div>
-            ))}
-          </dl>
-        </section>
+          <button
+            type="button"
+            onClick={() => {
+              setFeedback(null);
+              setDialogOpen(true);
+            }}
+            className="rounded-full bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--accent-strong)]"
+          >
+            Atualizar despensa
+          </button>
+          {feedback && (
+            <p className="text-sm font-medium text-[var(--secondary)]">{feedback}</p>
+          )}
+        </div>
       </article>
+
+      {ingredientsQuery.data && (
+        <CookedRecipeDialog
+          open={dialogOpen}
+          recipe={recipe}
+          pantry={pantry.items}
+          ingredients={ingredientsQuery.data}
+          ingredientNames={ingredientNames}
+          isLoadingPantry={pantry.isLoading}
+          isSaving={pantry.applyUpdates.isPending}
+          onClose={() => setDialogOpen(false)}
+          onConfirm={handleConfirm}
+        />
+      )}
     </div>
   );
 }
