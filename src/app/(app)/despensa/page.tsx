@@ -1,5 +1,5 @@
-import HomePage from "@/components/HomePage";
+import PantryPage from "@/components/PantryPage";
 
-export default function DespensaPage() {
-  return <HomePage />;
+export default function DespensaRoutePage() {
+  return <PantryPage />;
 }
