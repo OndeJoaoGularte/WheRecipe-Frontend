@@ -52,41 +52,37 @@ export default function LandingPage() {
   return (
     <div className="min-h-dvh">
       <SiteHeaderBar>
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3">
           {isLoading ? (
-            <div className="h-8 w-36 animate-pulse rounded-full bg-[var(--accent-soft)]/70" />
+            <div className="h-9 w-24 animate-pulse rounded-full bg-[var(--accent-soft)]/70 sm:w-36" />
           ) : isLoggedIn ? (
             <>
               <Link
                 href="/despensa"
-                className="rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--accent-strong)]"
+                className="rounded-full bg-[var(--accent)] px-3 py-2 text-sm font-semibold text-white transition hover:bg-[var(--accent-strong)] sm:px-4"
               >
-                Abrir despensa
+                <span className="sm:hidden">Despensa</span>
+                <span className="hidden sm:inline">Abrir despensa</span>
               </Link>
-              <div className="flex items-center gap-2 border-l border-[var(--line)] pl-2 sm:pl-3">
-                <span className="hidden max-w-28 truncate text-xs text-[var(--muted)] sm:inline">
-                  {user?.name}
-                </span>
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="rounded-full px-2.5 py-1 text-xs font-medium text-[var(--secondary)] hover:bg-[var(--accent-soft)]"
-                >
-                  Sair
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="min-h-10 rounded-full px-2.5 py-2 text-sm font-medium text-[var(--secondary)] hover:bg-[var(--accent-soft)] sm:px-3"
+              >
+                Sair
+              </button>
             </>
           ) : (
             <>
               <Link
                 href="/entrar"
-                className="rounded-full px-4 py-2 text-sm font-semibold text-[var(--secondary)] transition hover:bg-[var(--accent-soft)]"
+                className="min-h-10 rounded-full px-3 py-2 text-sm font-semibold text-[var(--secondary)] transition hover:bg-[var(--accent-soft)] sm:px-4"
               >
                 Entrar
               </Link>
               <Link
                 href="/cadastro"
-                className="rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--accent-strong)]"
+                className="min-h-10 rounded-full bg-[var(--accent)] px-3 py-2 text-sm font-semibold text-white transition hover:bg-[var(--accent-strong)] sm:px-4"
               >
                 Criar conta
               </Link>
@@ -95,39 +91,39 @@ export default function LandingPage() {
         </div>
       </SiteHeaderBar>
 
-      <section className="mx-auto flex min-h-[calc(100dvh-4rem)] w-full max-w-3xl flex-col items-center justify-center px-4 text-center sm:px-6">
+      <section className="mx-auto flex min-h-[calc(100dvh-3.5rem)] w-full max-w-3xl flex-col items-center justify-center px-4 py-8 text-center sm:min-h-[calc(100dvh-4rem)] sm:px-6 sm:py-0">
         <Image
           src="/brand/logo-mark.png"
           alt="WheRecipe"
           width={112}
           height={112}
-          className="h-[112px] w-auto rounded-3xl shadow-[0_16px_40px_rgba(74,84,137,0.28)]"
+          className="h-20 w-auto rounded-3xl shadow-[0_16px_40px_rgba(74,84,137,0.28)] sm:h-[112px]"
           priority
         />
-        <p className="mt-6 font-display text-4xl font-bold tracking-tight text-[var(--secondary)] sm:text-5xl">
+        <p className="mt-5 font-display text-3xl font-bold tracking-tight text-[var(--secondary)] sm:mt-6 sm:text-5xl">
           WheRecipe
         </p>
-        <h1 className="mt-4 font-display text-2xl font-semibold leading-tight text-[var(--ink)] sm:text-3xl">
+        <h1 className="mt-3 font-display text-xl font-semibold leading-tight text-[var(--ink)] sm:mt-4 sm:text-3xl">
           Cozinhe com o que já tem em casa.
         </h1>
-        <p className="mt-4 max-w-xl text-base text-[var(--muted)] sm:text-lg">
+        <p className="mt-3 max-w-xl text-sm text-[var(--muted)] sm:mt-4 sm:text-lg">
           Cadastre sua despensa, descubra receitas e atualize os itens com
           calma — nada desaparece sem a sua confirmação.
         </p>
-        <div className="mt-10 flex min-h-12 flex-wrap items-center justify-center gap-3">
+        <div className="mt-8 flex w-full max-w-sm flex-col items-stretch gap-3 sm:mt-10 sm:max-w-none sm:min-h-12 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center">
           {isLoading ? (
-            <div className="h-12 w-64 animate-pulse rounded-full bg-[var(--accent-soft)]/70" />
+            <div className="mx-auto h-12 w-full max-w-xs animate-pulse rounded-full bg-[var(--accent-soft)]/70" />
           ) : isLoggedIn ? (
             <>
               <Link
                 href="/despensa"
-                className="rounded-full bg-[var(--accent)] px-8 py-3.5 text-base font-semibold text-white shadow-[0_12px_30px_rgba(244,121,32,0.28)] transition hover:bg-[var(--accent-strong)]"
+                className="rounded-full bg-[var(--accent)] px-8 py-3.5 text-center text-base font-semibold text-white shadow-[0_12px_30px_rgba(244,121,32,0.28)] transition hover:bg-[var(--accent-strong)]"
               >
                 Ir para a despensa
               </Link>
               <Link
                 href="/cozinhar"
-                className="rounded-full border border-[var(--line)] bg-white/70 px-6 py-3.5 text-base font-semibold text-[var(--secondary)] transition hover:border-[var(--accent)]"
+                className="rounded-full border border-[var(--line)] bg-white/70 px-6 py-3.5 text-center text-base font-semibold text-[var(--secondary)] transition hover:border-[var(--accent)]"
               >
                 Fazer receita
               </Link>
@@ -136,13 +132,13 @@ export default function LandingPage() {
             <>
               <Link
                 href="/cadastro"
-                className="rounded-full bg-[var(--accent)] px-8 py-3.5 text-base font-semibold text-white shadow-[0_12px_30px_rgba(244,121,32,0.28)] transition hover:bg-[var(--accent-strong)]"
+                className="rounded-full bg-[var(--accent)] px-8 py-3.5 text-center text-base font-semibold text-white shadow-[0_12px_30px_rgba(244,121,32,0.28)] transition hover:bg-[var(--accent-strong)]"
               >
                 Começar agora
               </Link>
               <Link
                 href="/entrar"
-                className="rounded-full border border-[var(--line)] bg-white/70 px-6 py-3.5 text-base font-semibold text-[var(--secondary)] transition hover:border-[var(--accent)]"
+                className="rounded-full border border-[var(--line)] bg-white/70 px-6 py-3.5 text-center text-base font-semibold text-[var(--secondary)] transition hover:border-[var(--accent)]"
               >
                 Já tenho conta
               </Link>

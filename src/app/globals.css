@@ -23,8 +23,16 @@
 }
 
 html {
+  overflow-x: hidden;
   overflow-y: scroll;
   scrollbar-gutter: stable;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (max-width: 767px) {
+  html {
+    scrollbar-gutter: auto;
+  }
 }
 
 html,
@@ -34,12 +42,23 @@ body {
 
 body {
   min-height: 100dvh;
+  overflow-x: hidden;
   color: var(--foreground);
   font-family: var(--font-spline), system-ui, sans-serif;
   background:
     radial-gradient(ellipse 80% 50% at 8% -8%, #fed7aa 0%, transparent 55%),
     radial-gradient(ellipse 60% 40% at 100% 0%, #fef08a 0%, transparent 45%),
     linear-gradient(180deg, #fffbeb 0%, #fff7ed 50%, #fffbeb 100%);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  touch-action: manipulation;
 }
 
 .font-display {

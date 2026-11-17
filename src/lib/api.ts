@@ -1,6 +1,6 @@
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ||
-  "http://127.0.0.1:3333/api/v1";
+  "https://wherecipe-backend.onrender.com/api/v1";
 
 const TOKEN_KEY = "wherecipe.token";
 

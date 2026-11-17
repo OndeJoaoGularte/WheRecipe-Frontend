@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Quicksand, Spline_Sans } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/providers/AuthProvider";
@@ -21,6 +21,18 @@ export const metadata: Metadata = {
     icon: "/brand/logo.png",
     apple: "/brand/logo-mark.png",
   },
+  appleWebApp: {
+    capable: true,
+    title: "WheRecipe",
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#fffbeb",
 };
 
 export default function RootLayout({

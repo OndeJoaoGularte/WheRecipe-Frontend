@@ -81,17 +81,17 @@ export default function RecipeDetailPage({ params }: RecipeDetailPageProps) {
   }
 
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto px-4 py-8 sm:px-6">
-      <article className="mx-auto w-full max-w-3xl pb-10">
+    <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-5 sm:px-6 sm:py-8">
+      <article className="mx-auto w-full max-w-3xl pb-8 sm:pb-10">
         <Link
           href="/receitas"
-          className="text-sm font-medium text-[var(--secondary)] transition hover:underline"
+          className="inline-flex min-h-10 items-center text-sm font-medium text-[var(--secondary)] transition hover:underline"
         >
           ← Voltar às receitas
         </Link>
 
-        <header className="mt-6 space-y-3">
-          <h1 className="font-display text-3xl leading-tight text-[var(--ink)] sm:text-4xl">
+        <header className="mt-4 space-y-3 sm:mt-6">
+          <h1 className="font-display text-2xl leading-tight text-[var(--ink)] sm:text-4xl">
             {recipe.title}
           </h1>
           <p className="max-w-2xl text-[var(--muted)]">{recipe.description}</p>
@@ -155,7 +155,7 @@ export default function RecipeDetailPage({ params }: RecipeDetailPageProps) {
               setFeedback(null);
               setDialogOpen(true);
             }}
-            className="rounded-full bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--accent-strong)]"
+            className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--accent-strong)] sm:w-auto"
           >
             Atualizar despensa
           </button>

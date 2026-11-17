@@ -48,10 +48,10 @@ export default function AuthForm({ mode }: AuthFormProps) {
   }
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-4 py-10">
+    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-4 py-10 pb-[max(2.5rem,env(safe-area-inset-bottom))]">
       <BrandMark href="/" size="md" />
 
-      <h1 className="mt-8 font-display text-3xl font-bold text-[var(--ink)]">
+      <h1 className="mt-8 font-display text-2xl font-bold text-[var(--ink)] sm:text-3xl">
         {mode === "login" ? "Entrar" : "Criar conta"}
       </h1>
       <p className="mt-2 text-sm text-[var(--muted)]">
@@ -70,7 +70,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
               onChange={(event) => setName(event.target.value)}
               required
               autoComplete="name"
-              className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]"
+              className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-base text-[var(--ink)] outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]"
             />
           </label>
         )}
@@ -83,7 +83,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
             onChange={(event) => setEmail(event.target.value)}
             required
             autoComplete="email"
-            className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]"
+            className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-base text-[var(--ink)] outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]"
           />
         </label>
 
@@ -96,7 +96,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
             required
             minLength={4}
             autoComplete={mode === "login" ? "current-password" : "new-password"}
-            className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]"
+            className="w-full rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-base text-[var(--ink)] outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]"
           />
         </label>
 
