@@ -86,13 +86,13 @@ export default function CookedRecipeDialog({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/35 p-4 sm:items-center"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/35 p-0 sm:items-center sm:p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="cooked-dialog-title"
     >
-      <div className="max-h-[90dvh] w-full max-w-lg overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--background)] shadow-xl">
-        <div className="space-y-1 border-b border-[var(--line)] px-5 py-4">
+      <div className="flex max-h-[92dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl border border-[var(--line)] bg-[var(--background)] shadow-xl sm:rounded-2xl">
+        <div className="space-y-1 border-b border-[var(--line)] px-4 py-4 sm:px-5">
           <h2
             id="cooked-dialog-title"
             className="font-display text-xl font-semibold text-[var(--ink)]"
@@ -105,7 +105,7 @@ export default function CookedRecipeDialog({
           </p>
         </div>
 
-        <div className="max-h-[55dvh] space-y-3 overflow-y-auto px-5 py-4">
+        <div className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain px-4 py-4 sm:max-h-[55dvh] sm:px-5">
           {isLoadingPantry && (
             <p className="text-sm text-[var(--muted)]">Carregando despensa...</p>
           )}
@@ -160,7 +160,7 @@ export default function CookedRecipeDialog({
                         })
                       }
                       placeholder="Ex.: 1/4 pacote"
-                      className="w-full rounded-lg border border-[var(--line)] bg-white px-3 py-2 text-sm outline-none focus:border-[var(--accent)]"
+                      className="w-full rounded-lg border border-[var(--line)] bg-white px-3 py-2.5 text-base outline-none focus:border-[var(--accent)] sm:text-sm"
                     />
                   </label>
                 )}
@@ -169,11 +169,11 @@ export default function CookedRecipeDialog({
           })}
         </div>
 
-        <div className="flex flex-wrap justify-end gap-2 border-t border-[var(--line)] px-5 py-4">
+        <div className="flex flex-col-reverse gap-2 border-t border-[var(--line)] px-4 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:flex-row sm:flex-wrap sm:justify-end sm:px-5 sm:pb-4">
           <button
             type="button"
             onClick={resetAndClose}
-            className="rounded-full px-4 py-2 text-sm font-medium text-[var(--muted)] hover:bg-white/70"
+            className="min-h-11 rounded-full px-4 py-2.5 text-sm font-medium text-[var(--muted)] hover:bg-white/70"
           >
             Agora não
           </button>
@@ -181,7 +181,7 @@ export default function CookedRecipeDialog({
             type="button"
             onClick={handleConfirm}
             disabled={isSaving || isLoadingPantry}
-            className="rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--accent-strong)] disabled:opacity-60"
+            className="min-h-11 rounded-full bg-[var(--accent)] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[var(--accent-strong)] disabled:opacity-60"
           >
             {isSaving ? "Salvando..." : "Confirmar baixa"}
           </button>

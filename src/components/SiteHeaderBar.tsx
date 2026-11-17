@@ -24,9 +24,9 @@ export default function SiteHeaderBar({
           : "border-transparent"
       } ${className}`}
     >
-      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        <BrandMark href="/" size="sm" className="shrink-0" />
-        {children}
+      <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-2 px-3 sm:h-16 sm:gap-4 sm:px-6">
+        <BrandMark href="/" size="sm" className="min-w-0 shrink-0" />
+        <div className="flex min-w-0 items-center justify-end">{children}</div>
       </div>
     </header>
   );

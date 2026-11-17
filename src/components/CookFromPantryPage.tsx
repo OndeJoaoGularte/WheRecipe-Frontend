@@ -20,12 +20,12 @@ export default function CookFromPantryPage() {
   const hasItems = pantry.ingredientIds.length > 0;
 
   return (
-    <div className="mx-auto flex min-h-0 w-full max-w-3xl flex-1 flex-col overflow-hidden px-4 py-4 sm:px-6">
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-[var(--line)] bg-white/60 p-4 sm:p-5">
-        <div className="shrink-0 space-y-3 pb-4">
+    <div className="mx-auto flex min-h-0 w-full max-w-3xl flex-1 flex-col overflow-hidden px-3 py-3 sm:px-6 sm:py-4">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-[var(--line)] bg-white/60 p-3 sm:p-5">
+        <div className="shrink-0 space-y-3 pb-3 sm:pb-4">
           <div className="flex flex-wrap items-start justify-between gap-3">
-            <div className="space-y-1">
-              <h1 className="font-display text-2xl font-bold text-[var(--ink)]">
+            <div className="min-w-0 space-y-1">
+              <h1 className="font-display text-xl font-bold text-[var(--ink)] sm:text-2xl">
                 Fazer receita
               </h1>
               <p className="text-sm text-[var(--muted)]">
@@ -34,7 +34,7 @@ export default function CookFromPantryPage() {
             </div>
             <Link
               href="/despensa"
-              className="rounded-full border border-[var(--line)] bg-white/80 px-4 py-2 text-sm font-medium text-[var(--secondary)] transition hover:border-[var(--accent)]"
+              className="inline-flex min-h-11 items-center rounded-full border border-[var(--line)] bg-white/80 px-4 py-2 text-sm font-medium text-[var(--secondary)] transition hover:border-[var(--accent)]"
             >
               Editar despensa
             </Link>

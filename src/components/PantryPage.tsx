@@ -16,22 +16,27 @@ export default function PantryPage() {
     ingredientsQuery.isLoading || metaQuery.isLoading || pantry.isLoading;
 
   return (
-    <div className="mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col overflow-hidden px-4 py-4 sm:px-6">
-      <div className="shrink-0 mb-4 flex flex-wrap items-start justify-between gap-3">
-        <div className="space-y-1">
-          <h1 className="font-display text-2xl font-bold text-[var(--ink)]">
+    <div className="mx-auto w-full max-w-6xl px-3 py-3 sm:px-6 sm:py-4 lg:flex lg:min-h-0 lg:flex-1 lg:flex-col lg:overflow-hidden">
+      <div className="mb-3 flex flex-wrap items-start justify-between gap-3 sm:mb-4 lg:shrink-0">
+        <div className="min-w-0 space-y-1">
+          <h1 className="font-display text-xl font-bold text-[var(--ink)] sm:text-2xl">
             Despensa
           </h1>
           <p className="max-w-xl text-sm text-[var(--muted)]">
-            À esquerda você escolhe o que tem; à direita ficam os itens salvos.
-            Depois use “Fazer receita”.
+            <span className="lg:hidden">
+              Adicione o que tem e confira os itens salvos. Depois use “Cozinhar”.
+            </span>
+            <span className="hidden lg:inline">
+              À esquerda você escolhe o que tem; à direita ficam os itens salvos.
+              Depois use “Fazer receita”.
+            </span>
           </p>
         </div>
 
         {hasItems ? (
           <Link
             href="/cozinhar"
-            className="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--accent-strong)]"
+            className="inline-flex min-h-11 items-center justify-center rounded-full bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--accent-strong)]"
           >
             Fazer receita
           </Link>
@@ -42,9 +47,9 @@ export default function PantryPage() {
         )}
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+      <div className="lg:flex lg:min-h-0 lg:flex-1 lg:flex-col lg:overflow-hidden">
         {isLoading && (
-          <div className="h-full min-h-48 animate-pulse rounded-2xl bg-[var(--accent-soft)]/60" />
+          <div className="h-48 animate-pulse rounded-2xl bg-[var(--accent-soft)]/60 lg:h-full" />
         )}
 
         {(ingredientsQuery.error || metaQuery.error || pantry.error) && (

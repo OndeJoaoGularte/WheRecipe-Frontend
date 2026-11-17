@@ -34,36 +34,36 @@ export default function RecipesCatalogPage() {
   }, [activeTag, recipesQuery.data, search]);
 
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6">
-      <div className="mx-auto w-full max-w-6xl">
+    <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-4 sm:px-6 sm:py-6">
+      <div className="mx-auto w-full max-w-6xl pb-4">
         <header className="max-w-2xl space-y-2">
-          <h1 className="font-display text-3xl font-bold text-[var(--ink)]">
+          <h1 className="font-display text-2xl font-bold text-[var(--ink)] sm:text-3xl">
             Receitas
           </h1>
-          <p className="text-[var(--muted)]">
+          <p className="text-sm text-[var(--muted)] sm:text-base">
             Procure um prato específico quando você já sabe o que quer — sem
             passar pela despensa.
           </p>
         </header>
 
-        <div className="mt-6 space-y-4">
+        <div className="mt-5 space-y-4 sm:mt-6">
           <input
             type="search"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Buscar por nome, tag ou descrição..."
-            className="w-full max-w-xl rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-[var(--ink)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)]"
+            className="w-full max-w-xl rounded-xl border border-[var(--line)] bg-white/80 px-4 py-3 text-base text-[var(--ink)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)] sm:text-sm"
           />
 
           {tags.length > 0 && (
-            <div className="flex flex-wrap gap-2">
+            <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <button
                 type="button"
                 onClick={() => setActiveTag(null)}
                 className={
                   activeTag === null
-                    ? "rounded-full bg-[var(--accent)] px-3 py-1.5 text-sm font-medium text-white"
-                    : "rounded-full border border-[var(--line)] bg-white/70 px-3 py-1.5 text-sm text-[var(--ink)]"
+                    ? "shrink-0 rounded-full bg-[var(--accent)] px-3 py-2 text-sm font-medium text-white"
+                    : "shrink-0 rounded-full border border-[var(--line)] bg-white/70 px-3 py-2 text-sm text-[var(--ink)]"
                 }
               >
                 Todas
@@ -75,8 +75,8 @@ export default function RecipesCatalogPage() {
                   onClick={() => setActiveTag(tag === activeTag ? null : tag)}
                   className={
                     activeTag === tag
-                      ? "rounded-full bg-[var(--accent)] px-3 py-1.5 text-sm font-medium text-white"
-                      : "rounded-full border border-[var(--line)] bg-white/70 px-3 py-1.5 text-sm text-[var(--ink)]"
+                      ? "shrink-0 rounded-full bg-[var(--accent)] px-3 py-2 text-sm font-medium text-white"
+                      : "shrink-0 rounded-full border border-[var(--line)] bg-white/70 px-3 py-2 text-sm text-[var(--ink)]"
                   }
                 >
                   {tag}

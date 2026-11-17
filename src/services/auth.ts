@@ -52,9 +52,9 @@ export async function registerUser(input: RegisterInput): Promise<User> {
   const email = input.email.trim().toLowerCase();
   const password = input.password;
 
-  if (!name || !email || password.length < 4) {
+  if (!name || !email || password.length < 8) {
     throw new Error(
-      "Preencha nome, e-mail e uma senha com pelo menos 4 caracteres.",
+      "Preencha nome, e-mail e uma senha com pelo menos 8 caracteres.",
     );
   }
 

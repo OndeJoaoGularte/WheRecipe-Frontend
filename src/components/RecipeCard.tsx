@@ -22,11 +22,11 @@ export default function RecipeCard({
   return (
     <Link
       href={`/receitas/${recipe.id}`}
-      className="group block rounded-2xl border border-[var(--line)] bg-white/75 p-4 transition hover:border-[var(--accent)] hover:bg-white hover:shadow-[0_10px_30px_rgba(249,115,22,0.12)]"
+      className="group block rounded-2xl border border-[var(--line)] bg-white/75 p-3 transition hover:border-[var(--accent)] hover:bg-white hover:shadow-[0_10px_30px_rgba(249,115,22,0.12)] sm:p-4"
     >
       <div className="flex items-start justify-between gap-3">
-        <div className="space-y-1">
-          <h3 className="font-display text-lg font-semibold text-[var(--ink)] group-hover:text-[var(--secondary)]">
+        <div className="min-w-0 space-y-1">
+          <h3 className="font-display text-base font-semibold text-[var(--ink)] group-hover:text-[var(--secondary)] sm:text-lg">
             {recipe.title}
           </h3>
           <p className="text-sm text-[var(--muted)] line-clamp-2">
